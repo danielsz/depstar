@@ -86,10 +86,12 @@
                      (Files/newInputStream (make-array OpenOption 0))
                      java.io.BufferedInputStream.
                      JarInputStream.)]
-    (loop []
-      (when-let [entry (.getNextJarEntry is)]
-        (f is entry)
-        (recur)))))
+    (try
+      (loop []
+        (when-let [entry (.getNextJarEntry is)]
+          (f is entry)
+          (recur)))
+      (catch java.io.IOException e (println (.getMessage e))))))
 
 (defn classify
   [entry]
